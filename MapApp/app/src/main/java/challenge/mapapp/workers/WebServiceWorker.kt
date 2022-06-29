@@ -8,9 +8,11 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import challenge.mapapp.MapApplication
 import challenge.mapapp.R
 import challenge.mapapp.data.repositories.IPlacesRepository
+import com.google.android.material.snackbar.Snackbar
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -22,6 +24,12 @@ class WebServiceWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, params) {
     private val NOTIFICATION_ID = 1
 
+    companion object {
+        const val SUCCESS = "success"
+        const val FAILURE= "failure"
+        const val RESULT = "result"
+    }
+
     override suspend fun doWork(): Result {
         return try {
             repository.loadPlacesData().also {
@@ -29,10 +37,9 @@ class WebServiceWorker @AssistedInject constructor(
             }
             setForeground(getForegroundInfo())
 
-            Result.success()
+            Result.success(workDataOf(RESULT to SUCCESS))
         } catch (e: Exception) {
-            Log.d("CodingChallenge", "work failure: $e")
-            Result.failure()
+            Result.failure(workDataOf(RESULT to FAILURE))
         }
     }
 

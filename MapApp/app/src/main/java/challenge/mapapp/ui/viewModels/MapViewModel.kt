@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    val repository: IPlacesRepository
+    private val repository: IPlacesRepository
 ) : ViewModel() {
 
     suspend fun getResultsData(category: String): Flow<List<Result>> {

@@ -51,6 +51,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun workResult(): LiveData<List<WorkInfo>> {
+        return workManager.getWorkInfosByTagLiveData("INITIAL_WORK")
+    }
+
     fun startWork() {
         viewModelScope.launch(Dispatchers.IO) {
             val results = repository.getResults()
